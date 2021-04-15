@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const { urlencoded } = require("express");
 const ejsMate = require("ejs-mate");
 const Campground = require("./models/camground");
+const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
 const methodOverride = require("method-override");
 
@@ -46,6 +47,8 @@ app.get("/campgrounds/new", (req, res) => {
 app.post(
   "/campgrounds",
   catchAsync(async (req, res) => {
+    if (!req.body.campground)
+      throw new ExpressError("Invalid campground data", 400);
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground.id}`);
@@ -90,8 +93,13 @@ app.delete(
   })
 );
 
+app.all("*", (req, res, next) => {
+  next(new ExpressError("Page Not Found!", 404));
+});
+
 app.use((err, req, res, next) => {
-  res.send("OH NO! SOMETHING WRONG");
+  const { statusCode = 500, message = "SOMETHING WENT WRONG" } = err;
+  res.status(statusCode).send(message);
 });
 
 app.listen(3000, () => console.log("Server berjalan di port 3000!"));
