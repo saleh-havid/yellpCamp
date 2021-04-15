@@ -98,8 +98,9 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message = "SOMETHING WENT WRONG" } = err;
-  res.status(statusCode).send(message);
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = "SOMETHING WENT WRONG";
+  res.status(statusCode).render("error", { err });
 });
 
 app.listen(3000, () => console.log("Server berjalan di port 3000!"));
