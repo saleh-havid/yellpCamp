@@ -7,13 +7,23 @@ const Campground = require("./models/camground");
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
 const methodOverride = require("method-override");
-const { campgroundJoiSchema } = require("./joiSchemas");
+const { campgroundJoiSchema, reviewJoiSchema } = require("./joiSchemas");
 const { title } = require("process");
 const Review = require("./models/review");
 
 const validateCampground = (req, res, next) => {
   const { error } = campgroundJoiSchema.validate(req.body);
 
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+const validateReview = (req, res, next) => {
+  const { error } = reviewJoiSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new ExpressError(msg, 400);
@@ -87,7 +97,7 @@ app.get(
   })
 );
 
-app.put(
+app.post(
   "/campgrounds/:id",
   validateCampground,
   catchAsync(async (req, res, next) => {
@@ -110,6 +120,7 @@ app.delete(
 
 app.post(
   "/campgrounds/:id/reviews",
+  validateReview,
   catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
