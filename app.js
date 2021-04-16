@@ -9,6 +9,7 @@ const catchAsync = require("./utils/catchAsync");
 const methodOverride = require("method-override");
 const { campgroundJoiSchema } = require("./joiSchemas");
 const { title } = require("process");
+const Review = require("./models/review");
 
 const validateCampground = (req, res, next) => {
   const { error } = campgroundJoiSchema.validate(req.body);
@@ -104,6 +105,18 @@ app.delete(
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect("/campgrounds");
+  })
+);
+
+app.post(
+  "/campgrounds/:id/reviews",
+  catchAsync(async (req, res) => {
+    const campground = await Campground.findById(req.params.id);
+    const review = new Review(req.body.review);
+    campground.reviews.push(review);
+    await review.save();
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
   })
 );
 
