@@ -12,6 +12,7 @@ const { title } = require("process");
 const Review = require("./models/review");
 const campgroundsRoutes = require("./routes/campgrounds");
 const reviewsRoutes = require("./routes/reviews");
+const session = require("express-session");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -32,8 +33,22 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "public")));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+
+const sessionConfig = {
+  secret: "apajabuattest",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+
+app.use(session(sessionConfig));
 
 app.use("/campgrounds", campgroundsRoutes);
 app.use("/campgrounds/:id/reviews", reviewsRoutes);
