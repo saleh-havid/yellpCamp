@@ -12,7 +12,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.1.0"
   },
-  "name": "yelpCampFinalProject",
+  "name": "yelp-camp",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {

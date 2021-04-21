@@ -5,7 +5,7 @@ const catchAsync = require("../utils/catchAsync");
 const passport = require("passport");
 
 router.get("/register", (req, res) => {
-  res.render("user/register");
+  res.render("users/register");
 });
 
 router.post(
@@ -26,7 +26,7 @@ router.post(
 );
 
 router.get("/login", (req, res) => {
-  res.render("user/login");
+  res.render("users/login");
 });
 
 router.post(
