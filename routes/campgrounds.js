@@ -6,21 +6,19 @@ const { isLoggedin, isAuthor, validateCampground } = require("../middleware");
 const review = require("../models/review");
 const campgrounds = require("../controllers/campgrounds");
 
-var multer = require("multer");
-var upload = multer({ dest: "uploads/" });
+const multer = require("multer");
+const { storage } = require("../cloudinary");
+const upload = multer({ storage });
 
 router
   .route("/")
   .get(catchAsync(campgrounds.index))
-  // .post(
-  //   isLoggedin,
-  //   validateCampground,
-  //   catchAsync(campgrounds.createCampground)
-  // );
-  .post(upload.array("image"), (req, res) => {
-    console.log(req.body, req.files);
-    res.send("it worked!");
-  });
+  .post(
+    isLoggedin,
+    upload.array("image"),
+    validateCampground,
+    catchAsync(campgrounds.createCampground)
+  );
 
 router.get("/new", isLoggedin, campgrounds.renderNewForm);
 

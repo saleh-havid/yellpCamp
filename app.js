@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -25,6 +29,8 @@ mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useUnifiedTopology: true,
   useFindAndModify: false,
 });
+
+console.log(process.env.SECRET);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
