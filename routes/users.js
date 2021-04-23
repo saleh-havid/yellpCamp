@@ -7,8 +7,8 @@ const users = require("../controllers/users");
 
 router
   .route("/register")
-  .get("/register", users.renderRegister)
-  .post("/register", catchAsync(users.register));
+  .get(users.renderRegister)
+  .post(catchAsync(users.register));
 
 router
   .route("/login")
