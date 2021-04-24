@@ -30,7 +30,7 @@ mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useFindAndModify: false,
 });
 
-console.log(process.env.SECRET);
+
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -70,7 +70,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
-  console.log(req.session);
+
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
