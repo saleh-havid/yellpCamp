@@ -26,6 +26,9 @@ const User = require("./models/user");
 const usersRoutes = require("./routes/users");
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require("helmet");
+const MongoStore = require('connect-mongo');
+const dbUrl = "mongodb://localhost:27017/yelp-camp";
+// process.env.DB_URL;
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
@@ -101,6 +104,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+
 const sessionConfig = {
   secret: "apajabuattest",
   resave: false,
@@ -111,6 +115,10 @@ const sessionConfig = {
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
+  store: MongoStore.create({ 
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 3600,
+   }),
 };
 
 app.use(session(sessionConfig));
