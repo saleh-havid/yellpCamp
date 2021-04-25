@@ -1,21 +1,12 @@
-// if (process.env.NODE_ENV !== "production") {
-//   require("dotenv").config();
-// }
-process.env.NODE_ENV = "production";
-require("dotenv").config();
+require('dotenv').config()
 
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const { urlencoded } = require("express");
 const ejsMate = require("ejs-mate");
-const Campground = require("./models/camground");
 const ExpressError = require("./utils/ExpressError");
-const catchAsync = require("./utils/catchAsync");
 const methodOverride = require("method-override");
-const { campgroundJoiSchema, reviewJoiSchema } = require("./joiSchemas");
-const { title } = require("process");
-const Review = require("./models/review");
 const campgroundsRoutes = require("./routes/campgrounds");
 const reviewsRoutes = require("./routes/reviews");
 const session = require("express-session");
@@ -30,7 +21,7 @@ const MongoStore = require('connect-mongo');
 const dbUrl = "mongodb://localhost:27017/yelp-camp";
 // process.env.DB_URL;
 
-mongoose.connect("mongodb://localhost:27017/yelp-camp", {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
